@@ -1,0 +1,115 @@
+<!-- tabla-bootstrap.component.html -->
+<div class="container mt-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">codigo Serial</th>
+          <th scope="col">proveedor</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pro of productos; track $index) {
+            
+            <tr >
+                <th scope="row">{{$index + 1}}</th>
+                <td>{{pro.nombre}}</td>
+                <td>{{pro.cantidad}}</td>
+                <td>{{pro.categoriaProducto}}</td>
+                <td>{{pro.codigoSerial}}</td>
+                <td>{{pro.proveedor}}</td>
+              </tr>
+        }
+        <!-- Agrega más filas según sea necesario -->
+      </tbody>
+    </table>
+  </div>
+
+  <button (click)="open(Modal)">añadir</button>
+
+  <ng-template #Modal let-modal >
+    <div class="  mx-auto pt-2" >
+        <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
+            Añadir Producto
+        </h6>
+    </div>
+    <div class="modal-body pt-0">
+        <form [formGroup]="productoForm" (ngSubmit)="ingCategorizarProducto()">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                    <!-- <div class=" "> -->
+                    <label for="nombre" class="text-end col-md-6 mx-1">
+                        Nombre:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="nombre" name="nombre" value="hola" class="form-control blue-border"
+                            formControlName="nombre" ngModel>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                        <!-- <div class=" "> -->
+                        <label for="cantidad" class="text-end col-md-6 mx-1">
+                            Cantidad:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="cantidad" name="cantidad" 
+                                class="form-control blue-border" formControlName="cantidad" >
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                            <!-- <div class=" "> -->
+                        <label for="categoriaProducto" class="text-end col-md-6 mx-1">
+                            Categoria:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="categoriaProducto" name="categoriaProducto" 
+                                class="form-control blue-border" formControlName="categoriaProducto">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                            <!-- <div class=" "> -->
+                    <label for="codigoSerial" class="text-end col-md-6 mx-1">
+                        Codigo Serial:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="string" id="codigoSerial" name="codigoSerial" 
+                                class="form-control blue-border" formControlName="codigoSerial" >
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                    <!-- <div class=" "> -->
+                <label for="proveedor" class="text-end col-md-6 mx-1">
+                    proveedor:
+                </label>
+                <div class="col-md-6">
+                    <div class="mx-1">
+                        <input type="string" id="proveedor" name="proveedor" 
+                            class="form-control blue-border" formControlName="proveedor" >
+                        
+                    </div>
+                </div>
+            </div>
+                <div class="text-center mt-2">
+                    <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click');">Cancelar</button>
+                    <button type="submit"  class="btn btn-primary" >Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+  
