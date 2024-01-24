@@ -22,6 +22,7 @@ export class ProductoComponent implements Producto, OnInit{
   codigoSerial: string;
   nombre: string;
   proveedor: Proveedor;
+  ideliminar?: string;
 
   closeResult = "";
   productoForm: FormGroup<any>;
@@ -81,7 +82,10 @@ export class ProductoComponent implements Producto, OnInit{
     
   }
 
-  open(content: TemplateRef<any>, cliente?: any, crear?: boolean) {
+  open(content: TemplateRef<any>, producto?: any) {
+    if(producto){
+      this.ideliminar = producto.id;
+    }
     
 		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
 			(result) => {
@@ -128,5 +132,11 @@ export class ProductoComponent implements Producto, OnInit{
     }
 
     this.productoService.edit(this.productoForm.value.id,producto).finally(() => {});
+  }
+
+  eliminar(){
+
+    this.productoService.delete(this.ideliminar)
+
   }
 }
