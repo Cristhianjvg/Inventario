@@ -10,6 +10,7 @@ import { ModulesModule } from './modules/modules.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     provideFirebaseApp(() => initializeApp({"projectId":"bodega-1ec64","appId":"1:203597361338:web:c08eb9463b0226e5acd283","storageBucket":"bodega-1ec64.appspot.com","apiKey":"AIzaSyAnkDUVwSsl4UDK47X4gS6qYqhWYUVP7h8","authDomain":"bodega-1ec64.firebaseapp.com","messagingSenderId":"203597361338"})),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule
   ],
   providers: [
     provideClientHydration()
