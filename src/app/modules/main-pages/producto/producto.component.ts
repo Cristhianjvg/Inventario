@@ -40,6 +40,7 @@ export class ProductoComponent implements Producto, OnInit{
       nombre: "",
     };
     this.productoForm = this.fb.group({
+      id: [''],
       nombre: ['', Validators.required],
       cantidad: ['', Validators.required],
       categoriaIntegridad: ['', Validators.required],
@@ -70,14 +71,12 @@ export class ProductoComponent implements Producto, OnInit{
     }
     
     this.productoService.add(producto).finally(() => {
-      console.log("hola")
     });
   }
 
   mostrarProductos(){
     this.productoService.getAll().subscribe((data: any[]) => {
       this.productos = data;
-      console.log(this.productos)
     });
     
   }
@@ -87,13 +86,47 @@ export class ProductoComponent implements Producto, OnInit{
 		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
 			(result) => {
 				this.closeResult = `Closed with: ${result}`;
-        console.log(this.productoForm)
 			},
 			(reason) => {
         // Funcion para cerrar el modal
 				this.closeResult = `Dismissed `;
-        console.log(this.productoForm)
 			},
 		);
 	}
+
+  mandarDatosEditar(id: any){
+
+    let producto: any;
+    this.productoService.getById(id).subscribe((data) => {
+      producto = data;
+      
+      this.productoForm.patchValue({
+        id: producto.id,
+        nombre: producto.nombre,
+        cantidad: producto.cantidad,
+        categoriaIntegridad: producto.categoriaIntegridad,
+        categoriaProducto: producto.categoriaProducto,
+        codigoSerial: producto.codigoSerial,
+        proveedor: producto.proveedor,
+      });
+    });
+
+    
+    
+  }
+  
+  editar(): void {
+
+    const producto: Producto = {
+      id: this.productoForm.value.id,
+      nombre: this.productoForm.value.nombre,
+      cantidad: this.productoForm.value.cantidad,
+      categoriaIntegridad: this.productoForm.value.categoriaIntegridad,
+      categoriaProducto: this.productoForm.value.categoriaProducto,
+      codigoSerial: this.productoForm.value.codigoSerial,
+      proveedor: this.productoForm.value.proveedor,
+    }
+
+    this.productoService.edit(this.productoForm.value.id,producto).finally(() => {});
+  }
 }
