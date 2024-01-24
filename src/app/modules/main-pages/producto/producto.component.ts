@@ -56,7 +56,7 @@ export class ProductoComponent implements Producto, OnInit{
 
   // Opcional: Puedes implementar verificarProveedor aquí si es necesario
   verificarEstado() {
-    // Implementación de la verificación del proveedor
+    
     return true;
   }
 
