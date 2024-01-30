@@ -1,3 +1,200 @@
-<app-main-pages>
-    <p>proveedor works!</p>
-</app-main-pages>
+
+<!-- tabla-bootstrap.component.html -->
+<div class="container mt-4">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Celular</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (pro of proveedor; track $index) {
+            <tr>
+                <th scope="row">{{$index + 1}}</th>
+                <td>{{pro.nombre}}</td>
+                <td>{{pro.celular}}</td>
+                <td>{{pro.correo}}</td>
+                <td>
+                    <button class="btn btn-primary" (click)="mandarDatosEditar(pro.id); open(ModalEditar)">
+                    Update
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-primary" (click)="open(modalEliminar, pro)">
+                    Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<button (click)="open(ModalIngresar)" style="height: 30px; border-radius: 5px; margin-top: 30px;">añadir</button>
+
+<ng-template #ModalIngresar let-modal >
+    <div class="  mx-auto pt-2" >
+        <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
+            Añadir Proveedor
+        </h6>
+    </div>
+    <div class="modal-body pt-0">
+        <form [formGroup]="proveedorForm" (ngSubmit)="ingresarProveedores()">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                    <!-- <div class=" "> -->
+                    <label for="nombre" class="text-end col-md-6 mx-1">
+                        Nombre:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="nombre" name="nombre" 
+                                class="form-control blue-border" formControlName="nombre" >
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                        <!-- <div class=" "> -->
+                        <label for="celular" class="text-end col-md-6 mx-1">
+                            Celular:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="celular" name="celular" 
+                                class="form-control blue-border" formControlName="celular" >
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                            <!-- <div class=" "> -->
+                        <label for="correo" class="text-end col-md-6 mx-1">
+                            Correo:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="email" id="correo" name="correo" 
+                                class="form-control blue-border" formControlName="correo">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click');">Cancelar</button>
+                    <button type="submit"  class="btn btn-primary" >Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #ModalEditar let-modal >
+    <div class="  mx-auto pt-2" >
+        <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
+            Editar Producto
+        </h6>
+    </div>
+    <div class="modal-body pt-0">
+        <form [formGroup]="proveedorForm" (ngSubmit)="editar()">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                    <!-- <div class=" "> -->
+                    <label for="nombre" class="text-end col-md-6 mx-1">
+                        Nombre:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="nombre" name="nombre" value="hola" class="form-control blue-border"
+                            formControlName="nombre" ngModel>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                        <!-- <div class=" "> -->
+                        <label for="cantidad" class="text-end col-md-6 mx-1">
+                            Cantidad:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="cantidad" name="cantidad" 
+                                class="form-control blue-border" formControlName="cantidad" >
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                            <!-- <div class=" "> -->
+                        <label for="categoriaProducto" class="text-end col-md-6 mx-1">
+                            Categoria:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="categoriaProducto" name="categoriaProducto" 
+                                class="form-control blue-border" formControlName="categoriaProducto">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                            <!-- <div class=" "> -->
+                    <label for="codigoSerial" class="text-end col-md-6 mx-1">
+                        Codigo Serial:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="string" id="codigoSerial" name="codigoSerial" 
+                                class="form-control blue-border" formControlName="codigoSerial" >
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                    <!-- <div class=" "> -->
+                <label for="proveedor" class="text-end col-md-6 mx-1">
+                    proveedor:
+                </label>
+                <div class="col-md-6">
+                    <div class="mx-1">
+                        <input type="string" id="proveedor" name="proveedor" 
+                            class="form-control blue-border" formControlName="proveedor" >
+                        
+                    </div>
+                </div>
+            </div>
+                <div class="text-center mt-2">
+                    <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click');">Cancelar</button>
+                    <button type="submit"  class="btn btn-primary" >Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+<!-- Modal para eliminar clientes -->
+<ng-template #modalEliminar let-modal>
+    <div class=" mx-auto pt-2" >
+        <h5 class="modal-title mb-0" id="modal-basic-title" >
+            ¿Estas seguro que deseas continuar?
+        </h5>
+    </div>
+    <div class="modal-body  ">
+        <div class="content-img m-1 d-flex justify-content-center align-items-center" >
+            <img src="../assets/img/Vector-advertencia.png" alt="Image" class="img-fluid" width="100px">
+        </div>
+        
+        <div class="text-center m-2">
+            <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click')">
+                Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" (click)="eliminar(); modal.dismiss('Cross click')">
+                Eliminar
+            </button>
+        </div>
+    </div>
+</ng-template>

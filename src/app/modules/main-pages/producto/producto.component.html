@@ -1,4 +1,4 @@
-<app-main-pages>
+
 <!-- tabla-bootstrap.component.html -->
 <div class="container mt-4">
     <table class="table">
@@ -40,7 +40,7 @@
 </div>
 
 <button (click)="open(ModalIngresar)" style="height: 30px; border-radius: 5px; margin-top: 30px;">añadir</button>
-</app-main-pages>
+
 <ng-template #ModalIngresar let-modal >
     <div class="  mx-auto pt-2" >
         <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
@@ -57,9 +57,17 @@
                     </label>
                     <div class="col-md-6">
                         <div class="mx-1">
-                            <input type="text" id="nombre" name="nombre" value="hola" class="form-control blue-border"
-                            formControlName="nombre" ngModel>
+                            <select class="form-select blue-border rounded-3" id="raza" name="raza"
+                            formControlName="raza">
+                            <option disabled>escoger</option>
+                            @for (pro of proveedores; track $index) {
+                                <option [value]="pro">{{pro.nombre}}</option>
+                            }
                             
+                            </select>
+                            <!-- <input type="text" id="nombre" name="nombre" value="hola" class="form-control blue-border"
+                            formControlName="nombre" ngModel>
+                             -->
                         </div>
                     </div>
                 </div>

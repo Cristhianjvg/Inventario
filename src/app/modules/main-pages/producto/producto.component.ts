@@ -6,6 +6,7 @@ import { ProductoService } from '../../../services/producto.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import {NgForm} from '@angular/forms';
+import { ProveedorService } from '../../../services/proveedor.service';
 
 
 @Component({
@@ -27,8 +28,10 @@ export class ProductoComponent implements Producto, OnInit{
   closeResult = "";
   productoForm: FormGroup<any>;
   productos: Producto[] = [];
+  proveedores: Proveedor[] = [];
 
-  constructor(private fb: FormBuilder, private productoService: ProductoService, private modalService: NgbModal) {
+  constructor(private fb: FormBuilder, private productoService: ProductoService, private modalService: NgbModal,
+              private proveedorService: ProveedorService) {
     this.cantidad = 0;
     this.categoriaIntegridad = "";
     this.categoriaProducto = "";
@@ -52,6 +55,19 @@ export class ProductoComponent implements Producto, OnInit{
   }
   ngOnInit(): void {
     this.mostrarProductos();
+    this.traerProveedores();
+  }
+
+  mostrarProductos(){
+    this.productoService.getAll().subscribe((data: any[]) => {
+      this.productos = data;
+    });
+  }
+
+  traerProveedores(){
+    this.productoService.getAll().subscribe((data: any[]) => {
+      this.proveedores = data;
+    });
   }
   
 
@@ -59,6 +75,10 @@ export class ProductoComponent implements Producto, OnInit{
   verificarEstado() {
     
     return true;
+  }
+
+  controlarExistencias(){
+    const nombresProducto = {}
   }
 
   ingCategorizarProducto(){
@@ -75,12 +95,7 @@ export class ProductoComponent implements Producto, OnInit{
     });
   }
 
-  mostrarProductos(){
-    this.productoService.getAll().subscribe((data: any[]) => {
-      this.productos = data;
-    });
-    
-  }
+  
 
   open(content: TemplateRef<any>, producto?: any) {
     if(producto){

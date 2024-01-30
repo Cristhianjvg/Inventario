@@ -8,16 +8,37 @@ const routes: Routes = [
   {
     path: '',
     component: MainPagesComponent,
+    children: [
+      {
+        path: 'producto',
+        component: ProductoComponent
+      },
+      {
+        path: 'proveedor',
+        component: ProveedorComponent
+      }
+    ]
   },
-  {
-    path: 'producto',
-    component: ProductoComponent
-  },
-  {
-    path: 'proveedor',
-    component: ProveedorComponent
-  }
+  
 ];
+
+// const routes: Routes = [
+//   {
+//     path: '',
+//     component: MainPagesComponent,
+//     children: [
+//       {
+//         path: 'producto',
+//         component: ProductoComponent
+//       },
+//       {
+//         path: 'proveedor',
+//         component: ProveedorComponent
+//       }
+//     ]
+//   },
+  
+// ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
