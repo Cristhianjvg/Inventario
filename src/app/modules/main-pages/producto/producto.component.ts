@@ -17,6 +17,9 @@ import { ProveedorService } from '../../../services/proveedor.service';
 })
 
 export class ProductoComponent implements Producto, OnInit{
+crearNuevoProducto() {
+throw new Error('Method not implemented.');
+}
   cantidad: number;
   categoriaIntegridad: string;
   categoriaProducto: string;
@@ -52,7 +55,11 @@ export class ProductoComponent implements Producto, OnInit{
       codigoSerial: ['', Validators.required],
       proveedor: ['', [Validators.email]],
     });
+
+    
   }
+
+  
   ngOnInit(): void {
     this.mostrarProductos();
     this.traerProveedores();
