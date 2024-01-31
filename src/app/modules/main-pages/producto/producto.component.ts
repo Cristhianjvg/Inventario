@@ -65,7 +65,7 @@ export class ProductoComponent implements Producto, OnInit{
   }
 
   traerProveedores(){
-    this.productoService.getAll().subscribe((data: any[]) => {
+    this.proveedorService.getAll().subscribe((data: any[]) => {
       this.proveedores = data;
     });
   }

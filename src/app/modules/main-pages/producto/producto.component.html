@@ -60,14 +60,11 @@
                             <select class="form-select blue-border rounded-3" id="raza" name="raza"
                             formControlName="raza">
                             <option disabled>escoger</option>
-                            @for (pro of proveedores; track $index) {
+                            @for (pro of productos; track $index) {
                                 <option [value]="pro">{{pro.nombre}}</option>
                             }
                             
                             </select>
-                            <!-- <input type="text" id="nombre" name="nombre" value="hola" class="form-control blue-border"
-                            formControlName="nombre" ngModel>
-                             -->
                         </div>
                     </div>
                 </div>
@@ -117,9 +114,14 @@
                 </label>
                 <div class="col-md-6">
                     <div class="mx-1">
-                        <input type="string" id="proveedor" name="proveedor" 
-                            class="form-control blue-border" formControlName="proveedor" >
-                        
+                        <select class="form-select blue-border rounded-3" id="raza" name="raza"
+                            formControlName="raza">
+                            <option disabled>escoger</option>
+                            @for (pro of proveedores; track $index) {
+                                <option [value]="pro">{{pro.nombre}}</option>
+                            }
+                            
+                        </select>
                     </div>
                 </div>
             </div>
