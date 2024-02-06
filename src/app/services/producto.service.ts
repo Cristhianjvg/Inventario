@@ -49,4 +49,6 @@ export class ProductoService {
   async delete(id: any) {
     await deleteDoc(doc(this.firestore, this.dbPath + '/' + id));
   }
+
+
 }

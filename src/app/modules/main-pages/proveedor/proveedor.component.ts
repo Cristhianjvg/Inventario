@@ -8,7 +8,48 @@ import { ProveedorService } from '../../../services/proveedor.service';
 @Component({
   selector: 'app-proveedor',
   templateUrl: './proveedor.component.html',
-  styles: [
+  styles: [ 
+    `
+    .btn-agregar{
+        display: inline-block;
+        border-radius: 4px;
+        background-color: #3d405b;
+        border: none;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 17px;
+        padding: 16px;
+        width: 130px;
+        transition: all 0.5s;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .btn-agregar span {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    .btn-agregar span:after {
+        content: '»';
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -15px;
+        transition: 0.5s;
+    }
+
+    .btn-agregar:hover span {
+        padding-right: 15px;
+    }
+
+    .btn-agregar:hover span:after {
+        opacity: 1;
+        right: 0;
+    }
+    `
   ]
 })
 export class ProveedorComponent implements Proveedor, OnInit{

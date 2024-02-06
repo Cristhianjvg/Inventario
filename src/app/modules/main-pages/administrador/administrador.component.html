@@ -1,1 +1,29 @@
-<p>administrador works!</p>
+<div class="container mt-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">codigo Serial</th>
+                <th scope="col">proveedor</th>
+                <th scope="col">Fecha creacion</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        @for (pro of productos; track $index) {
+            <tr>
+                <th scope="row">{{$index + 1}}</th>
+                <td>{{pro.nombre}}</td>
+                <td>{{pro.cantidad}}</td>
+                <td>{{pro.categoriaProducto}}</td>
+                <td>{{pro.codigoSerial}}</td>
+                <td>{{pro.proveedor}}</td>
+                <td>31/01/2024</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

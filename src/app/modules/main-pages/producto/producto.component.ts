@@ -7,19 +7,60 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import {NgForm} from '@angular/forms';
 import { ProveedorService } from '../../../services/proveedor.service';
+import { NombreProductoService } from '../../../services/nombre-producto.service';
+import { functions } from '../../../helpers/functions';
 
 
 @Component({
   selector: 'app-producto',
   templateUrl: './producto.component.html',
   styles: [
+    `
+    .btn-agregar{
+        display: inline-block;
+        border-radius: 4px;
+        background-color: #3d405b;
+        border: none;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 17px;
+        padding: 16px;
+        width: 130px;
+        transition: all 0.5s;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .btn-agregar span {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+    }
+
+    .btn-agregar span:after {
+        content: '»';
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -15px;
+        transition: 0.5s;
+    }
+
+    .btn-agregar:hover span {
+        padding-right: 15px;
+    }
+
+    .btn-agregar:hover span:after {
+        opacity: 1;
+        right: 0;
+    }
+    `
   ]
 })
 
 export class ProductoComponent implements Producto, OnInit{
-crearNuevoProducto() {
-throw new Error('Method not implemented.');
-}
+
   cantidad: number;
   categoriaIntegridad: string;
   categoriaProducto: string;
@@ -32,9 +73,12 @@ throw new Error('Method not implemented.');
   productoForm: FormGroup<any>;
   productos: Producto[] = [];
   proveedores: Proveedor[] = [];
+  nombresProducto: any;
+  nombreProductoForm: FormGroup<any>;
+  submited: boolean = false;
 
   constructor(private fb: FormBuilder, private productoService: ProductoService, private modalService: NgbModal,
-              private proveedorService: ProveedorService) {
+              private proveedorService: ProveedorService, private nombreProductoService: NombreProductoService) {
     this.cantidad = 0;
     this.categoriaIntegridad = "";
     this.categoriaProducto = "";
@@ -46,6 +90,10 @@ throw new Error('Method not implemented.');
       id: "",
       nombre: "",
     };
+    this.nombreProductoForm = this.fb.group({
+      nombre: ['', Validators.required],
+      estado: ['', Validators.required]
+    })
     this.productoForm = this.fb.group({
       id: [''],
       nombre: ['', Validators.required],
@@ -55,7 +103,6 @@ throw new Error('Method not implemented.');
       codigoSerial: ['', Validators.required],
       proveedor: ['', [Validators.email]],
     });
-
     
   }
 
@@ -63,6 +110,7 @@ throw new Error('Method not implemented.');
   ngOnInit(): void {
     this.mostrarProductos();
     this.traerProveedores();
+    this.traerNombreProducto();
   }
 
   mostrarProductos(){
@@ -76,19 +124,43 @@ throw new Error('Method not implemented.');
       this.proveedores = data;
     });
   }
-  
+
+  traerNombreProducto(){
+    this.nombreProductoService.getAll().subscribe((data: any[]) => {
+      this.nombresProducto = data;
+    });
+  }
 
   // Opcional: Puedes implementar verificarProveedor aquí si es necesario
   verificarEstado() {
-    
     return true;
   }
 
   controlarExistencias(){
-    const nombresProducto = {}
+    const nombreProducto: any = {
+      nombre: this.nombreProductoForm.value.nombre,
+      estado: this.nombreProductoForm.value.estado
+    }
+    let nuevoProducto:any;
+    this.nombreProductoService.getByName(nombreProducto.nombre).subscribe((data: any) => {
+      if (data) {
+        console.log("el producto ya existe")
+      }else{
+        this.nombreProductoService.add(nombreProducto).finally(() => {
+          this.nombreProductoForm.reset();
+        this.modalService.dismissAll();
+        })
+      }
+  });
+
+  
+  
+
+  
   }
 
   ingCategorizarProducto(){
+    this.submited = true
     const producto: Producto = {
       nombre: this.productoForm.value.nombre,
       cantidad: this.productoForm.value.cantidad,
@@ -97,8 +169,11 @@ throw new Error('Method not implemented.');
       codigoSerial: this.productoForm.value.codigoSerial,
       proveedor: this.productoForm.value.proveedor,
     }
+    this.productoForm.reset();
+    this.modalService.dismissAll();
     
     this.productoService.add(producto).finally(() => {
+      this.submited = false
     });
   }
 
@@ -143,6 +218,7 @@ throw new Error('Method not implemented.');
   
   editar(): void {
 
+    this.submited = true;
     const producto: Producto = {
       id: this.productoForm.value.id,
       nombre: this.productoForm.value.nombre,
@@ -153,12 +229,17 @@ throw new Error('Method not implemented.');
       proveedor: this.productoForm.value.proveedor,
     }
 
-    this.productoService.edit(this.productoForm.value.id,producto).finally(() => {});
+    this.productoForm.reset();
+    this.modalService.dismissAll();
+
+    this.productoService.edit(this.productoForm.value.id,producto).finally(() => { this.submited = false});
   }
 
   eliminar(){
-
     this.productoService.delete(this.ideliminar)
+  }
 
+  invalidField(field:string){
+    return functions.invalidField(field, this.productoForm,  true)
   }
 }

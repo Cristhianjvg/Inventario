@@ -6,7 +6,7 @@ export interface Administrador extends Personal{
     exportartInforme(informe: string): void;
     establecerParametros(): string;
     categorizarProveedor(id: string): void;
-    generarInforme(productos: Producto[]): string;
+    generarInforme(): void;
     identificarProveedor(): void;
     ingresarProveedor(celular: string, correo: string, nombre:string): void;
 }

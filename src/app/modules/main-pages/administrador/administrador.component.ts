@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { Administrador } from 'src/app/modelos/administrador';
-import { Producto } from 'src/app/modelos/producto';
+import { Component, OnInit } from '@angular/core';
+import { Producto } from '../../../modelos/producto';
+import { Administrador } from '../../../modelos/administrador';
+import { ProductoService } from '../../../services/producto.service';
 
 @Component({
   selector: 'app-administrador',
@@ -8,17 +9,22 @@ import { Producto } from 'src/app/modelos/producto';
   styles: [
   ]
 })
-export class AdministradorComponent implements Administrador{
+export class AdministradorComponent implements Administrador, OnInit{
   id: string;
   celular: string;
   correo: string;
   nombre: string;
 
-  constructor(){
+  productos: any;
+
+  constructor(private productoService: ProductoService){
     this.id = "";
     this.celular = "";
     this.correo = "";
     this.nombre = "";
+  }
+  ngOnInit(): void {
+    this.generarInforme();
   }
   
 
@@ -31,8 +37,11 @@ export class AdministradorComponent implements Administrador{
   categorizarProveedor(id: string): void {
     throw new Error('Method not implemented.');
   }
-  generarInforme(productos: Producto[]): string {
-    throw new Error('Method not implemented.');
+  generarInforme(): void {
+    this.productoService.getAll().subscribe((data: any[]) => {
+      this.productos = data;
+    });
+    
   }
   identificarProveedor(): void {
     throw new Error('Method not implemented.');

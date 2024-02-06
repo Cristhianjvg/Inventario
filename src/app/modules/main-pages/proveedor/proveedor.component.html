@@ -1,7 +1,7 @@
 
 <!-- tabla-bootstrap.component.html -->
 <div class="container mt-4">
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -33,9 +33,14 @@
         }
         </tbody>
     </table>
+    <div>
+        <button class="btn-agregar" (click)="open(ModalIngresar)">
+            <span>Añadir</span>
+          </button>
+    </div>
 </div>
 
-<button (click)="open(ModalIngresar)" style="height: 30px; border-radius: 5px; margin-top: 30px;">añadir</button>
+
 
 <ng-template #ModalIngresar let-modal >
     <div class="  mx-auto pt-2" >

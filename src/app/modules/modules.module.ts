@@ -8,13 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { BrowserModule } from '@angular/platform-browser';
 import { ProductoComponent } from './main-pages/producto/producto.component';
+import { AdministradorComponent } from './main-pages/administrador/administrador.component';
 
 
 @NgModule({
   declarations: [
     MainPagesComponent,
     ProveedorComponent,
-    ProductoComponent
+    ProductoComponent,
+    AdministradorComponent
   ],
   imports: [
     CommonModule,

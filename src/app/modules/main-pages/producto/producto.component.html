@@ -2,21 +2,21 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-6 mx-auto">
-            <h4 class="text-center mb-4">Crear Nuevo Producto</h4>
-            <form>
+            <h4 class="text-center mb-4">Control de Existencias</h4>
+            <form [formGroup]="nombreProductoForm" (ngSubmit)="controlarExistencias()">
                 <div class="mb-3">
-                    <label for="nombreProducto" class="form-label">Nombre del Producto:</label>
-                    <input type="text" class="form-control" id="nombreProducto" placeholder="Ingrese el nombre del producto">
+                    <label for="nombre" class="form-label">Nombre del Producto:</label>
+                    <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Ingrese el nombre del producto">
                 </div>
                 <div class="mb-3">
-                    <label for="estadoProducto" class="form-label">Estado del Producto:</label>
-                    <select class="form-select" id="estadoProducto">
-                        <option value="1">Estado deseado</option>
-                        <option value="2">Buen estado</option>
-                        <option value="3">Mal estado</option>
+                    <label for="estado" class="form-label">Estado del Producto:</label>
+                    <select class="form-select" id="estado" formControlName="estado">
+                        <option value="Estado deseado">Estado deseado</option>
+                        <option value="Buen estado">Buen estado</option>
+                        <option value="Mal estado">Mal estado</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-primary">Agregar Producto</button>
+                <button type="submit" class="btn btn-primary">Ingresar Producto</button>
             </form>
         </div>
     </div>
@@ -24,7 +24,7 @@
 
 <!-- tabla-bootstrap.component.html -->
 <div class="container mt-4">
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -60,9 +60,12 @@
         }
         </tbody>
     </table>
+    <div>
+        <button class="btn-agregar" (click)="open(ModalIngresar)">
+            <span>Añadir</span>
+        </button>
+    </div>
 </div>
-
-<button (click)="open(ModalIngresar)" style="height: 30px; border-radius: 5px; margin-top: 30px;">añadir</button>
 
 <ng-template #ModalIngresar let-modal >
     <div class="  mx-auto pt-2" >
@@ -80,13 +83,12 @@
                     </label>
                     <div class="col-md-6">
                         <div class="mx-1">
-                            <select class="form-select blue-border rounded-3" id="raza" name="raza"
-                            formControlName="raza">
+                            <select class="form-select blue-border rounded-3" id="nombre" name="nombre"
+                            formControlName="nombre" [ngClass]="{'is-invalid': invalidField('nombre')}">
                             <option disabled>escoger</option>
-                            @for (pro of productos; track $index) {
-                                <option [value]="pro">{{pro.nombre}}</option>
+                            @for (nom_pro of nombresProducto; track $index) {
+                                <option [value]="nom_pro">{{nom_pro.nombre}}</option>
                             }
-                            
                             </select>
                         </div>
                     </div>
@@ -99,8 +101,7 @@
                     <div class="col-md-6">
                         <div class="mx-1">
                             <input type="text" id="cantidad" name="cantidad" 
-                                class="form-control blue-border" formControlName="cantidad" >
-                            
+                                class="form-control blue-border" formControlName="cantidad" [ngClass]="{'is-invalid': invalidField('cantidad')}" >
                         </div>
                     </div>
                 </div>
@@ -112,7 +113,7 @@
                     <div class="col-md-6">
                         <div class="mx-1">
                             <input type="text" id="categoriaProducto" name="categoriaProducto" 
-                                class="form-control blue-border" formControlName="categoriaProducto">
+                                class="form-control blue-border" formControlName="categoriaProducto" [ngClass]="{'is-invalid': invalidField('categoriaProducto')}">
                             
                         </div>
                     </div>
@@ -125,7 +126,7 @@
                     <div class="col-md-6">
                         <div class="mx-1">
                             <input type="string" id="codigoSerial" name="codigoSerial" 
-                                class="form-control blue-border" formControlName="codigoSerial" >
+                                class="form-control blue-border" formControlName="codigoSerial" [ngClass]="{'is-invalid': invalidField('codigoSerial')}" >
                             
                         </div>
                     </div>
@@ -137,8 +138,8 @@
                 </label>
                 <div class="col-md-6">
                     <div class="mx-1">
-                        <select class="form-select blue-border rounded-3" id="raza" name="raza"
-                            formControlName="raza">
+                        <select class="form-select blue-border rounded-3" id="proveedor" name="proveedor"
+                            formControlName="proveedor" [ngClass]="{'is-invalid': invalidField('proveedor')}">
                             <option disabled>escoger</option>
                             @for (pro of proveedores; track $index) {
                                 <option [value]="pro">{{pro.nombre}}</option>
