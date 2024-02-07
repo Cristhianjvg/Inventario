@@ -5,14 +5,13 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class NombreProductoService {
+export class InventarioService {
 
-  private dbPath = '/nombres_producto';
+  private dbPath = '/inventario';
 
   constructor(private firestore: Firestore) {}
 
   getAll(): Observable<any> {
-    
     return collectionData(collection(this.firestore, this.dbPath));
   }
 
@@ -22,7 +21,6 @@ export class NombreProductoService {
   
 
   async add(data: any) {
-    console.log('data', data);
 
     await addDoc(collection(this.firestore, this.dbPath), data).then(
       (ref: any) => {
@@ -36,20 +34,20 @@ export class NombreProductoService {
     const q = query(collection(this.firestore, this.dbPath), where("nombre", "==", nombre));
 
     return new Observable((observer) => {
-        getDocs(q)
-            .then((querySnapshot) => {
-                if (querySnapshot.size > 0) {
-                    const data = querySnapshot.docs.map((doc) => doc.data());
-                    observer.next(data);
-                } else {
-                    observer.next(null);  // Emitir null si no se encuentra ningún documento
-                }
-                observer.complete();
-            })
-            .catch((error) => {
-                observer.error(error);
-                observer.complete();
-            });
+      getDocs(q)
+        .then((querySnapshot) => {
+            if (querySnapshot.size > 0) {
+                const data = querySnapshot.docs.map((doc) => doc.data());
+                observer.next(data);
+            } else {
+                observer.next(null);  // Emitir null si no se encuentra ningún documento
+            }
+            observer.complete();
+        })
+        .catch((error) => {
+            observer.error(error);
+            observer.complete();
+        });
     });
   }
 

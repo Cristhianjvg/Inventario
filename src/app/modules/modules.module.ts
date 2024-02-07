@@ -9,6 +9,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { BrowserModule } from '@angular/platform-browser';
 import { ProductoComponent } from './main-pages/producto/producto.component';
 import { AdministradorComponent } from './main-pages/administrador/administrador.component';
+import { OperadorBodegaComponent } from './main-pages/operador-bodega/operador-bodega.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { AdministradorComponent } from './main-pages/administrador/administrador
     MainPagesComponent,
     ProveedorComponent,
     ProductoComponent,
-    AdministradorComponent
+    AdministradorComponent,
+    OperadorBodegaComponent
   ],
   imports: [
     CommonModule,

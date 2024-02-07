@@ -1,38 +1,16 @@
 
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            <h4 class="text-center mb-4">Control de Existencias</h4>
-            <form [formGroup]="nombreProductoForm" (ngSubmit)="controlarExistencias()">
-                <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre del Producto:</label>
-                    <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Ingrese el nombre del producto">
-                </div>
-                <div class="mb-3">
-                    <label for="estado" class="form-label">Estado del Producto:</label>
-                    <select class="form-select" id="estado" formControlName="estado">
-                        <option value="Estado deseado">Estado deseado</option>
-                        <option value="Buen estado">Buen estado</option>
-                        <option value="Mal estado">Mal estado</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Ingresar Producto</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- tabla-bootstrap.component.html -->
-<div class="container mt-4">
+    <h3>Productos</h3>
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Cantidad</th>
                 <th scope="col">Categoria</th>
-                <th scope="col">codigo Serial</th>
-                <th scope="col">proveedor</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Codigo Serial</th>
+                <th scope="col">Proveedor</th>
+                <!-- <th scope="col">Cambiar Estado</th> -->
                 <th scope="col">Editar</th>
                 <th scope="col">Eliminar</th>
             </tr>
@@ -42,17 +20,60 @@
             <tr>
                 <th scope="row">{{$index + 1}}</th>
                 <td>{{pro.nombre}}</td>
-                <td>{{pro.cantidad}}</td>
                 <td>{{pro.categoriaProducto}}</td>
+                <td>{{pro.categoriaIntegridad}}</td>
                 <td>{{pro.codigoSerial}}</td>
                 <td>{{pro.proveedor}}</td>
+                <!-- <td>
+                    <button class="btn btn-primary" (click)="mandarDatosEditar(pro.id); open(ModalEditarProducto)">
+                    Cambiar Estado
+                    </button>
+                </td> -->
                 <td>
-                    <button class="btn btn-primary" (click)="mandarDatosEditar(pro.id); open(ModalEditar)">
-                    Update
+                    <button class="btn btn-primary" (click)="mandarDatosEditar(pro.id); open(ModalEditarProducto)">
+                    Editar
                     </button>
                 </td>
                 <td>
-                    <button class="btn btn-primary" (click)="open(modalEliminar, pro)">
+                    <button class="btn btn-primary" (click)="open(modalEliminarProducto, pro)">
+                    Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <button class="btn-agregar" (click)="open(ModalReceptarProducto)">
+        <span>Receptar</span>
+    </button>
+</div>
+
+<!-- TABLA DE INVENTARO -->
+<div class="container mt-4">
+    <h3>Control de existencias</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (lote of inventarios; track $index) {
+            <tr>
+                <th scope="row">{{$index + 1}}</th>
+                <td>{{lote.nombre}}</td>
+                <td>{{lote.cantidad}}</td>
+                <td>
+                    <button class="btn btn-primary" (click)="mandarDatosEditar(lote.id); open(ModalEditarInventario)">
+                    Editar
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-primary" (click)="open(modalEliminarLote, lote)">
                     Eliminar
                     </button>
                 </td>
@@ -61,65 +82,69 @@
         </tbody>
     </table>
     <div>
-        <button class="btn-agregar" (click)="open(ModalIngresar)">
+        <button class="btn-agregar" (click)="open(ModalControlarExistencias)">
             <span>Añadir</span>
         </button>
     </div>
 </div>
 
-<ng-template #ModalIngresar let-modal >
+<!-- FORMULARIO DE RECEPTAR Y EDITAR PRODUCTOS -->
+<ng-template #ModalReceptarProducto let-modal >
     <div class="  mx-auto pt-2" >
         <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
-            Añadir Producto
+            Producto
         </h6>
     </div>
     <div class="modal-body pt-0">
-        <form [formGroup]="productoForm" (ngSubmit)="ingCategorizarProducto()">
+        <form [formGroup]="ProductoForm" (ngSubmit)="ingCategorizarProducto()">
             <div class="row">
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                    <!-- <div class=" "> -->
+                    
                     <label for="nombre" class="text-end col-md-6 mx-1">
                         Nombre:
                     </label>
                     <div class="col-md-6">
                         <div class="mx-1">
-                            <select class="form-select blue-border rounded-3" id="nombre" name="nombre"
-                            formControlName="nombre" [ngClass]="{'is-invalid': invalidField('nombre')}">
-                            <option disabled>escoger</option>
-                            @for (nom_pro of nombresProducto; track $index) {
-                                <option [value]="nom_pro">{{nom_pro.nombre}}</option>
-                            }
-                            </select>
+                            <input type="text" id="nombre" name="nombre" 
+                                class="form-control blue-border" formControlName="nombre" [ngClass]="{'is-invalid': invalidField('nombre')}">
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                        <!-- <div class=" "> -->
-                        <label for="cantidad" class="text-end col-md-6 mx-1">
-                            Cantidad:
-                        </label>
-                    <div class="col-md-6">
-                        <div class="mx-1">
-                            <input type="text" id="cantidad" name="cantidad" 
-                                class="form-control blue-border" formControlName="cantidad" [ngClass]="{'is-invalid': invalidField('cantidad')}" >
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 d-flex align-items-center mt-2">
-                            <!-- <div class=" "> -->
+                            
                         <label for="categoriaProducto" class="text-end col-md-6 mx-1">
                             Categoria:
                         </label>
                     <div class="col-md-6">
                         <div class="mx-1">
-                            <input type="text" id="categoriaProducto" name="categoriaProducto" 
-                                class="form-control blue-border" formControlName="categoriaProducto" [ngClass]="{'is-invalid': invalidField('categoriaProducto')}">
-                            
+                            <select class="form-select blue-border rounded-3" id="categoriaProducto" name="categoriaProducto"
+                            formControlName="categoriaProducto" [ngClass]="{'is-invalid': invalidField('categoriaProducto')}">
+                                <option disabled>escoger</option>
+                                <option value="insumo">insumo</option>
+                                <option value="medicamento">medicamento</option>
+                                <option value="dispositivos">dispositivos</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                            <!-- <div class=" "> -->
+                    <label for="categoriaIntegridad" class="text-end col-md-6 mx-1">
+                        Integridad:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <select class="form-select blue-border rounded-3" id="categoriaIntegridad" name="categoriaIntegridad"
+                            formControlName="categoriaIntegridad" [ngClass]="{'is-invalid': invalidField('categoriaIntegridad')}">
+                                <option disabled>escoger</option>
+                                <option value="muy bueno">Muy bueno</option>
+                                <option value="bueno">bueno</option>
+                                <option value="malo">Malo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                            
                     <label for="codigoSerial" class="text-end col-md-6 mx-1">
                         Codigo Serial:
                     </label>
@@ -132,7 +157,7 @@
                     </div>
                 </div>
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                    <!-- <div class=" "> -->
+                    
                 <label for="proveedor" class="text-end col-md-6 mx-1">
                     proveedor:
                 </label>
@@ -142,7 +167,7 @@
                             formControlName="proveedor" [ngClass]="{'is-invalid': invalidField('proveedor')}">
                             <option disabled>escoger</option>
                             @for (pro of proveedores; track $index) {
-                                <option [value]="pro">{{pro.nombre}}</option>
+                                <option [value]="pro.nombre">{{pro.nombre}}</option>
                             }
                             
                         </select>
@@ -158,56 +183,63 @@
     </div>
 </ng-template>
 
-<ng-template #ModalEditar let-modal >
+<ng-template #ModalEditarProducto let-modal >
     <div class="  mx-auto pt-2" >
         <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
             Editar Producto
         </h6>
     </div>
     <div class="modal-body pt-0">
-        <form [formGroup]="productoForm" (ngSubmit)="editar()">
+        <form [formGroup]="ProductoForm" (ngSubmit)="editarProducto()">
             <div class="row">
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                    <!-- <div class=" "> -->
+                    
                     <label for="nombre" class="text-end col-md-6 mx-1">
                         Nombre:
                     </label>
                     <div class="col-md-6">
                         <div class="mx-1">
                             <input type="text" id="nombre" name="nombre" value="hola" class="form-control blue-border"
-                            formControlName="nombre" ngModel>
+                            formControlName="nombre">
                             
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                        <!-- <div class=" "> -->
-                        <label for="cantidad" class="text-end col-md-6 mx-1">
-                            Cantidad:
-                        </label>
-                    <div class="col-md-6">
-                        <div class="mx-1">
-                            <input type="text" id="cantidad" name="cantidad" 
-                                class="form-control blue-border" formControlName="cantidad" >
                             
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 d-flex align-items-center mt-2">
-                            <!-- <div class=" "> -->
                         <label for="categoriaProducto" class="text-end col-md-6 mx-1">
                             Categoria:
                         </label>
                     <div class="col-md-6">
                         <div class="mx-1">
-                            <input type="text" id="categoriaProducto" name="categoriaProducto" 
-                                class="form-control blue-border" formControlName="categoriaProducto">
-                            
+                            <select class="form-select blue-border rounded-3" id="categoriaProducto" name="categoriaProducto"
+                            formControlName="categoriaProducto" [ngClass]="{'is-invalid': invalidField('categoriaProducto')}">
+                                <option disabled>escoger</option>
+                                <option value="insumo">insumo</option>
+                                <option value="medicamento">medicamento</option>
+                                <option value="dispositivos">dispositivos</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                            <!-- <div class=" "> -->
+                    <label for="categoriaIntegridad" class="text-end col-md-6 mx-1">
+                        Integridad:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <select class="form-select blue-border rounded-3" id="categoriaIntegridad" name="categoriaIntegridad"
+                            formControlName="categoriaIntegridad" [ngClass]="{'is-invalid': invalidField('categoriaIntegridad')}">
+                                <option disabled>escoger</option>
+                                <option value="insumo">Muy bueno</option>
+                                <option value="medicamento">bueno</option>
+                                <option value="dispositivos">Malo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                            
                     <label for="codigoSerial" class="text-end col-md-6 mx-1">
                         Codigo Serial:
                     </label>
@@ -220,15 +252,19 @@
                     </div>
                 </div>
                 <div class="col-md-12 d-flex align-items-center mt-2">
-                    <!-- <div class=" "> -->
+                    
                 <label for="proveedor" class="text-end col-md-6 mx-1">
                     proveedor:
                 </label>
                 <div class="col-md-6">
                     <div class="mx-1">
-                        <input type="string" id="proveedor" name="proveedor" 
-                            class="form-control blue-border" formControlName="proveedor" >
-                        
+                        <select class="form-select blue-border rounded-3" id="proveedor" name="proveedor"
+                            formControlName="proveedor" [ngClass]="{'is-invalid': invalidField('proveedor')}">
+                            <option disabled>escoger</option>
+                            @for (pro of proveedores; track $index) {
+                                <option [value]="pro">{{pro.nombre}}</option>
+                            }
+                        </select>
                     </div>
                 </div>
             </div>
@@ -240,11 +276,12 @@
         </form>
     </div>
 </ng-template>
-<!-- Modal para eliminar clientes -->
-<ng-template #modalEliminar let-modal>
+
+<!-- VENTANA PARA DEVOLUCION DE PRODUCTOS -->
+<ng-template #modalEliminarProducto let-modal>
     <div class=" mx-auto pt-2" >
         <h5 class="modal-title mb-0" id="modal-basic-title" >
-            ¿Estas seguro que deseas continuar?
+            ¿Estas seguro que deseas devolver el producto?
         </h5>
     </div>
     <div class="modal-body  ">
@@ -256,7 +293,126 @@
             <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click')">
                 Cancelar
             </button>
-            <button type="submit" class="btn btn-primary" (click)="eliminar(); modal.dismiss('Cross click')">
+            <button type="submit" class="btn btn-primary" (click)="eliminarProducto(); modal.dismiss('Cross click')">
+                Devolucion
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<!-- FORMULARIO PARA CONTROL DE EXISTENCIAS -->
+<ng-template #ModalControlarExistencias let-modal >
+    <div class="  mx-auto pt-2" >
+        <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
+            Inventario
+        </h6>
+    </div>
+    <div class="modal-body pt-0">
+        <form [formGroup]="inventarioForm" (ngSubmit)="controlarExistencias()">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                    
+                    <label for="nombre" class="text-end col-md-6 mx-1">
+                        Nombre:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <select class="form-select blue-border rounded-3" id="nombre" name="nombre"
+                            formControlName="nombre" [ngClass]="{'is-invalid': invalidField('nombre')}">
+                                <option disabled>escoger</option>
+                                @for (pro of productos; track $index) {
+                                    <option [value]="pro.nombre">{{pro.nombre}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                        
+                        <label for="cantidad" class="text-end col-md-6 mx-1">
+                            Cantidad:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="cantidad" name="cantidad" 
+                                class="form-control blue-border" formControlName="cantidad" [ngClass]="{'is-invalid': invalidField('cantidad')}" >
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-2">
+                    <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click');">Cancelar</button>
+                    <button type="submit"  class="btn btn-primary" >Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #ModalEditarInventario let-modal >
+    <div class="  mx-auto pt-2" >
+        <h6 class="modal-title mb-0" id="modal-basic-title" style="border-bottom: 2px solid black;">
+            Inventario
+        </h6>
+    </div>
+    <div class="modal-body pt-0">
+        <form [formGroup]="inventarioForm" (ngSubmit)="controlarExistencias()">
+            <div class="row">
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                    
+                    <label for="nombre" class="text-end col-md-6 mx-1">
+                        Nombre:
+                    </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <select class="form-select blue-border rounded-3" id="nombre" name="nombre"
+                            formControlName="nombre" [ngClass]="{'is-invalid': invalidField('nombre')}">
+                                <option disabled>escoger</option>
+                                @for (pro of productos; track $index) {
+                                    <option [value]="pro.nombre">{{pro.nombre}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center mt-2">
+                        
+                        <label for="cantidad" class="text-end col-md-6 mx-1">
+                            Cantidad:
+                        </label>
+                    <div class="col-md-6">
+                        <div class="mx-1">
+                            <input type="text" id="cantidad" name="cantidad" 
+                                class="form-control blue-border" formControlName="cantidad" [ngClass]="{'is-invalid': invalidField('cantidad')}" >
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-2">
+                    <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click');">Cancelar</button>
+                    <button type="submit"  class="btn btn-primary" >Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #modalEliminarLote let-modal>
+    <div class=" mx-auto pt-2" >
+        <h5 class="modal-title mb-0" id="modal-basic-title" >
+            ¿Estas seguro que deseas devolver el producto?
+        </h5>
+    </div>
+    <div class="modal-body  ">
+        <div class="content-img m-1 d-flex justify-content-center align-items-center" >
+            <img src="../assets/img/Vector-advertencia.png" alt="Image" class="img-fluid" width="100px">
+        </div>
+        
+        <div class="text-center m-2">
+            <button type="button" class="btn btn-outline-dark mx-2" (click)="modal.dismiss('Cross click')">
+                Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" (click)="eliminarLote(); modal.dismiss('Cross click')">
                 Eliminar
             </button>
         </div>
