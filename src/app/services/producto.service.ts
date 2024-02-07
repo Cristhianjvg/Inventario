@@ -22,8 +22,6 @@ export class ProductoService {
   constructor(private firestore: Firestore) {}
 
   getAll(): Observable<any> {
-    
-    console.log(collection(this.firestore, this.dbPath));
     return collectionData(collection(this.firestore, this.dbPath));
   }
 

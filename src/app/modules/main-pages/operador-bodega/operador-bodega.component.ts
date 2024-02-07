@@ -9,6 +9,7 @@ import {NgForm} from '@angular/forms';
 import { ProveedorService } from '../../../services/proveedor.service';
 import { NombreProductoService } from '../../../services/nombre-producto.service';
 import { functions } from '../../../helpers/functions';
+import { InventarioService } from '../../../services/inventario.service';
 
 @Component({
   selector: 'app-operador-bodega',
@@ -26,15 +27,15 @@ export class OperadorBodegaComponent {
   ideliminar?: string;
 
   closeResult = "";
-  productoForm: FormGroup<any>;
+  inventarioForm: FormGroup<any>;
   productos: Producto[] = [];
   proveedores: Proveedor[] = [];
-  nombresProducto: any;
-  nombreProductoForm: FormGroup<any>;
+  inventarios: any;
+  ProductoForm: FormGroup<any>;
   submited: boolean = false;
 
   constructor(private fb: FormBuilder, private productoService: ProductoService, private modalService: NgbModal,
-              private proveedorService: ProveedorService, private nombreProductoService: NombreProductoService) {
+              private proveedorService: ProveedorService, private inventarioServices: InventarioService) {
     this.cantidad = 0;
     this.categoriaIntegridad = "";
     this.categoriaProducto = "";
@@ -46,18 +47,18 @@ export class OperadorBodegaComponent {
       id: "",
       nombre: "",
     };
-    this.nombreProductoForm = this.fb.group({
+    this.ProductoForm = this.fb.group({
       nombre: ['', Validators.required],
-      estado: ['', Validators.required]
-    })
-    this.productoForm = this.fb.group({
-      id: [''],
-      nombre: ['', Validators.required],
-      cantidad: ['', Validators.required],
       categoriaIntegridad: ['', Validators.required],
       categoriaProducto: ['', Validators.required],
       codigoSerial: ['', Validators.required],
-      proveedor: ['', [Validators.email]],
+      proveedor: ['', Validators.required],
+    })
+    this.inventarioForm = this.fb.group({
+      id: [''],
+      nombre: ['', Validators.required],
+      cantidad: ['', Validators.required],
+      
     });
     
   }
@@ -66,12 +67,19 @@ export class OperadorBodegaComponent {
   ngOnInit(): void {
     this.mostrarProductos();
     this.traerProveedores();
-    this.traerNombreProducto();
+    this.traerProductos();
+  }
+
+  // FUNCIONES PARA MOSTRAR LOS DATOS EN LA VISTA
+  traerProductos(){
+    this.productoService.getAll().subscribe((data: any[]) => {
+      this.productos = data;
+    });
   }
 
   mostrarProductos(){
-    this.productoService.getAll().subscribe((data: any[]) => {
-      this.productos = data;
+    this.inventarioServices.getAll().subscribe((data: any[]) => {
+      this.inventarios = data;
     });
   }
 
@@ -80,80 +88,107 @@ export class OperadorBodegaComponent {
       this.proveedores = data;
     });
   }
+  // --------------------------------------------------
 
-  traerNombreProducto(){
-    this.nombreProductoService.getAll().subscribe((data: any[]) => {
-      this.nombresProducto = data;
-    });
-  }
-
-  recepcion(){
-
-  }
-
+  // FUNCION PARA INGRESAR Y CATEGORIZAR LOS PRODUCTOS
   ingCategorizarProducto(){
     this.submited = true
     const producto: Producto = {
-      nombre: this.productoForm.value.nombre,
-      cantidad: this.productoForm.value.cantidad,
-      categoriaIntegridad: this.productoForm.value.categoriaProducto,
-      categoriaProducto: this.productoForm.value.categoriaProducto,
-      codigoSerial: this.productoForm.value.codigoSerial,
-      proveedor: this.productoForm.value.proveedor,
+      nombre: this.ProductoForm.value.nombre,
+      categoriaIntegridad: this.ProductoForm.value.categoriaIntegridad,
+      categoriaProducto: this.ProductoForm.value.categoriaProducto,
+      codigoSerial: this.ProductoForm.value.codigoSerial,
+      proveedor: this.ProductoForm.value.proveedor,
     }
-    this.productoForm.reset();
+    this.ProductoForm.reset();
     this.modalService.dismissAll();
     
-    // Conexion con el DAO
     this.productoService.add(producto).finally(() => {
       this.submited = false
     });
   }
 
+  // FUNCION PARA CONTROLAR LAS EXISTENCIAS
   controlarExistencias(){
-    const nombreProducto: any = {
-      nombre: this.nombreProductoForm.value.nombre,
-      estado: this.nombreProductoForm.value.estado
+    const inventario: any = {
+      nombre: this.inventarioForm.value.nombre,
+      cantidad: this.inventarioForm.value.cantidad
     }
-    let nuevoProducto:any;
-    // Controlar existencias
-    this.nombreProductoService.add(nombreProducto).finally(() => {
-      this.nombreProductoForm.reset();
-    this.modalService.dismissAll();
+    this.inventarioServices.add(inventario).finally(() => {
+      this.inventarioForm.reset();
+      this.modalService.dismissAll();
     })
   }
 
+  // EDITAR Y ELIMINAR PRODUCTO Y LOTES
+  editarProducto(): void {
+
+    this.submited = true;
+    const producto: Producto = {
+      id: this.ProductoForm.value.id,
+      nombre: this.ProductoForm.value.nombre,
+      categoriaIntegridad: this.ProductoForm.value.categoriaIntegridad,
+      categoriaProducto: this.ProductoForm.value.categoriaProducto,
+      codigoSerial: this.ProductoForm.value.codigoSerial,
+      proveedor: this.ProductoForm.value.proveedor,
+    }
+
+    this.ProductoForm.reset();
+    this.modalService.dismissAll();
+
+    this.productoService.edit(this.ProductoForm.value.id,producto).finally(() => { this.submited = false});
+  }
+
+  eliminarProducto(){
+    this.productoService.delete(this.ideliminar)
+  }
+
+  eliminarLote(){
+    this.inventarioServices.delete(this.ideliminar)
+  }
+  // -----------------------------------------------
+  
+
+  // MISCELANEA
+  open(content: TemplateRef<any>, producto?: any) {
+    if(producto){
+      this.ideliminar = producto.id;
+    }
+    
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+			(result) => {
+				this.closeResult = `Closed with: ${result}`;
+			},
+			(reason) => {
+				this.closeResult = `Dismissed `;
+			},
+		);
+	}
+
+  mandarDatosEditar(id: any){
+    let producto: any;
+    this.productoService.getById(id).subscribe((data) => {
+      producto = data;
+      
+      this.ProductoForm.patchValue({
+        id: producto.id,
+        nombre: producto.nombre,
+        cantidad: producto.cantidad,
+        categoriaIntegridad: producto.categoriaIntegridad,
+        categoriaProducto: producto.categoriaProducto,
+        codigoSerial: producto.codigoSerial,
+        proveedor: producto.proveedor,
+      });
+    });
+  }
   
   // Opcional: Puedes implementar verificarProveedor aquí si es necesario
   verificarEstado() {
     return true;
   }
 
-  editar(): void {
-
-    this.submited = true;
-    const producto: Producto = {
-      id: this.productoForm.value.id,
-      nombre: this.productoForm.value.nombre,
-      cantidad: this.productoForm.value.cantidad,
-      categoriaIntegridad: this.productoForm.value.categoriaIntegridad,
-      categoriaProducto: this.productoForm.value.categoriaProducto,
-      codigoSerial: this.productoForm.value.codigoSerial,
-      proveedor: this.productoForm.value.proveedor,
-    }
-
-    this.productoForm.reset();
-    this.modalService.dismissAll();
-
-    this.productoService.edit(this.productoForm.value.id,producto).finally(() => { this.submited = false});
-  }
-
-  eliminar(){
-    this.productoService.delete(this.ideliminar)
-  }
-
   invalidField(field:string){
-    return functions.invalidField(field, this.productoForm,  true)
+    return functions.invalidField(field, this.ProductoForm,  this.submited)
   }
 
 }
